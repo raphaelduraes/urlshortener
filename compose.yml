@@ -1,0 +1,13 @@
+version: "3.7"
+volumes:
+  redis-data:
+services:
+  redis:
+    image: redis:7.2.4
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/root/redis
+    env_file:
+      - .env
