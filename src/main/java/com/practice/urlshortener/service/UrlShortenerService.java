@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 
 @Service
-public class ShortenerService {
+public class UrlShortenerService {
 
     @Autowired
     private Environment env;
@@ -25,7 +25,7 @@ public class ShortenerService {
     @Autowired
     private UrlValidator urlValidator;
 
-    private static final Logger logger = LoggerFactory.getLogger(ShortenerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UrlShortenerService.class);
 
     public String getOriginalUrl(String hash) throws UrlNotFoundException {
         Url url = urlRepository.findById(hash).orElseThrow(UrlNotFoundException::new);

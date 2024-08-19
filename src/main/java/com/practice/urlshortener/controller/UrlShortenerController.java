@@ -1,15 +1,11 @@
 package com.practice.urlshortener.controller;
 
-import com.google.gson.JsonObject;
 import com.practice.urlshortener.exception.UrlNotFoundException;
-import com.practice.urlshortener.service.ShortenerService;
-import org.apache.coyote.BadRequestException;
-import org.apache.tomcat.util.json.JSONParser;
-import org.apache.tomcat.util.json.ParseException;
-import org.json.JSONException;
+import com.practice.urlshortener.service.UrlShortenerService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class UrlShortenerController {
 
     @Autowired
-    private ShortenerService shortenerService;
+    private UrlShortenerService shortenerService;
 
-    @GetMapping("/{hash}")
+    @GetMapping(value = "/{hash}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getOriginalUrl(@PathVariable String hash) {
         try {
             String originalUrl = shortenerService.getOriginalUrl(hash);
@@ -30,12 +26,12 @@ public class UrlShortenerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> getShortUrl(@RequestBody String requestBody) throws BadRequestException {
+    public ResponseEntity<String> getShortUrl(@RequestBody String requestBody) {
         try {
             JSONObject body = new JSONObject(requestBody);
             String originalURl = body.get("originalUrl").toString();
             return new ResponseEntity<>(shortenerService.shortUrl(originalURl), HttpStatus.OK);
-        } catch (JSONException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
